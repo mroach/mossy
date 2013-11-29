@@ -1,0 +1,15 @@
+GIT
+  remote: git@github.com:veracross/tiny_tds.git
+  revision: ae3430ac3fd2bc8b3a03a69ea7b4aa052a9a7d72
+  specs:
+    tiny_tds (0.6.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  tiny_tds!
