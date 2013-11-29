@@ -23,7 +23,7 @@ module Mossy
       'IF' => 'FUNCTiON',
       'SN' => 'SYNONYM',
       'TR' => 'TRIGGER'
-    }
+    }.freeze
 
     # connection: Mossy::Connection
     def initialize(connection, args = {})
