@@ -12,12 +12,12 @@ module Mossy
 
     def script
       parts = []
-      parts << "#{@grant_or_deny} #{@permission_name} ON [#{@major_name}]"
+      parts << "#{@grant_or_deny} #{@permission_name} ON #{@major_name.quotename}"
       if !@minor_name.nil?
-        parts << "(#{@minor_name})"
+        parts << "(#{@minor_name.quotename})"
       end
       parts << (@grant_or_deny == "REVOKE" ? "FROM" : "TO")
-      parts << "[#{@grantee}]"
+      parts << "#{@grantee.quotename}"
       "#{parts.join(' ')};"
     end
   end

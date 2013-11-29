@@ -17,7 +17,7 @@ module Mossy
     def script
       if @is_primary_key
         parts = ["ALTER TABLE"]
-        parts << "[#{@table}] ADD CONSTRAINT [#{@name}]"
+        parts << "#{@table.quotename} ADD CONSTRAINT #{@name.quotename}"
         parts << "PRIMARY KEY #{@type}"
         parts << "(#{script_column_list(index_columns)})"
         return "#{parts.join(' ')};"
@@ -35,8 +35,8 @@ module Mossy
       if @type != "NONCLUSTERED"
         parts << @type
       end
-      parts << "INDEX #{@name}"
-      parts << "ON [#{@table}]"
+      parts << "INDEX #{@name.quotename}"
+      parts << "ON #{@table.quotename}"
       parts << "(#{script_column_list(index_columns)})"
       if !included_columns.empty?
         parts << "INCLUDE (#{script_column_list(included_columns)})"
@@ -44,7 +44,7 @@ module Mossy
       if opts.any?
         parts << "WITH (#{option_list(opts)})"
       end
-      parts << "ON [#{@data_space}]"
+      parts << "ON #{@data_space.quotename}"
       "#{parts.join(' ')};"
     end
 

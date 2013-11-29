@@ -87,13 +87,13 @@ module Mossy
       script = []
 
       if @include_use
-        script << "USE [#{@database}];\nGO"
+        script << "USE #{@database.quotename};\nGO"
         script << ""
       end
 
       if @include_drop
         script << "IF OBJECT_ID('#{name}', '#{type}') IS NOT NULL"
-        script << "  DROP #{OBJECT_TYPE_NAMES[type]} [#{name}];\nGO"
+        script << "  DROP #{OBJECT_TYPE_NAMES[type]} #{name.quotename};\nGO"
         script << ""
       end
 

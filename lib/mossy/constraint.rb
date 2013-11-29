@@ -10,8 +10,8 @@ module Mossy
     end
 
     def script
-      "ALTER TABLE [#{@table}] ADD CONSTRAINT " +
-      "[#{@name}] CHECK #{@definition};"
+      "ALTER TABLE #{@table.quotename} ADD CONSTRAINT " +
+      "#{@name.quotename} CHECK #{@definition};"
     end
   end
 end

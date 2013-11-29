@@ -13,12 +13,12 @@ module Mossy
     def script
       col_indent = @columns.max_by { |c| c.name.length }.name.length
       parts = []
-      parts << "CREATE TABLE [#{@schema}].[#{@name}] ("
+      parts << "CREATE TABLE #{@schema.quotename}.#{@name.quotename} ("
       parts << @columns.map {|c| "    #{c.definition(col_indent)}" }.join(",\n")
       parts << ")"
-      parts << "ON [#{@data_space}]"
+      parts << "ON #{@data_space.quotename}"
       if @lob_space != @data_space
-        parts << "TEXTIMAGE_ON [#{@data_space}]"
+        parts << "TEXTIMAGE_ON #{@data_space.quotename}"
       end
       "#{parts.join("\n")};"
     end

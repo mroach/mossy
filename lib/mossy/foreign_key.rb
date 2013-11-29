@@ -12,18 +12,18 @@ module Mossy
     end
 
     def script
-      parts = ["ALTER TABLE [#{@schema}].[#{@table}]"]
-      parts << "ADD CONSTRAINT [#{@name}]"
+      parts = ["ALTER TABLE #{@schema.quotename}.#{@table.quotename}"]
+      parts << "ADD CONSTRAINT #{@name.quotename}"
       parts << "FOREIGN KEY (#{@referencing_column})"
-      parts << "REFERENCES [#{@referenced_table_schema}].[#{@referenced_table}]"
-      parts << "([#{@referenced_column}])"
+      parts << "REFERENCES #{@referenced_table_schema.quotename}.#{@referenced_table.quotename}"
+      parts << "(#{@referenced_column.quotename})"
       if @delete_action != "NO_ACTION"
         parts << "ON DELETE #{@delete_action}"
       end
       if @update_action != "NO_ACTION"
         parts << "ON UPDATE #{@update_action}"
       end
-      "#{parts.join(' ')}"
+      "#{parts.join(' ')};"
     end
   end
 end

@@ -15,7 +15,7 @@ module Mossy
     def definition(col_indent = 1)
       parts = []
       # add two to col_indent to compensate for []
-      parts << sprintf("%-#{col_indent + 2}s", "[#{@name}]")
+      parts << sprintf("%-#{col_indent + 2}s", @name.quotename)
 
       if @is_computed
         parts.push("AS #{@computed_definition}")

@@ -16,7 +16,7 @@ module Mossy
     end
 
     def use(database)
-      exec_non_query("USE [#{database}];")
+      exec_non_query("USE #{database.quotename};")
     end
 
     def exec_rows(sql)
