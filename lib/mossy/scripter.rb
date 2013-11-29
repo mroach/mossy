@@ -13,6 +13,7 @@ module Mossy
       :comment_scripts => true
     }.freeze
 
+    # map object type abbreviations to names used in create/drop statements
     OBJECT_TYPE_NAMES = {
       'V'  => 'VIEW',
       'P'  => 'PROCEDURE',
@@ -24,8 +25,7 @@ module Mossy
       'TR' => 'TRIGGER'
     }
 
-    ##
-    # connection - Mossy::Connection
+    # connection: Mossy::Connection
     def initialize(connection, args = {})
       args = args ? DEFAULTS.merge(args) : DEFAULTS
       args.each do |k,v|

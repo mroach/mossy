@@ -11,6 +11,7 @@ module Mossy
       end
     end
 
+    # generate the column definition that would be used in a create table statement
     # col_indent pads column names so the specs line up
     def definition(col_indent = 1)
       parts = []
@@ -33,6 +34,8 @@ module Mossy
       parts.join(" ")
     end
 
+    # generate the type spec. for character types this will include a length
+    # decimal and numeric types include the precision and scale
     def type_spec
       if %w(varchar nvarchar char nchar).include?(@type)
         if @max_length == -1
