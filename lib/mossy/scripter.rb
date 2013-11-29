@@ -8,7 +8,9 @@ module Mossy
       :include_permissions => true,
       :include_constraints => true,
       :include_indexes => true,
-      :include_foreign_keys => true
+      :include_foreign_keys => true,
+      :include_extended_properties => true,
+      :comment_scripts => true
     }.freeze
 
     OBJECT_TYPE_NAMES = {
@@ -65,11 +67,11 @@ module Mossy
     protected
 
     def build_script(name, type, main)
-
       permissions = []
       indexes = []
       foreign_keys = []
       constraints = []
+      extended_properties = []
 
       if !['TR'].include?(type)
         permissions = get_permissions(name, type) if @include_permissions
@@ -83,6 +85,8 @@ module Mossy
         foreign_keys = get_foreign_keys(name) if @include_foreign_keys
         constraints = get_constraints(name) if @include_constraints
       end
+
+      extended_properties = get_extended_properties(name) if @include_extended_properties
 
       script = []
 
@@ -99,30 +103,13 @@ module Mossy
 
       script << main
       script << "GO\n"
-      if foreign_keys.any?
-        script << '-' * 80
-        script << "-- FOREIGN KEYS\n--"
-        script.concat(foreign_keys.map { |k| k.script })
-        script << ""
-      end
-      if constraints.any?
-        script << '-' * 80
-        script << "-- CONSTRAINTS\n--"
-        script.concat(constraints.map { |c| c.script })
-        script << ""
-      end
-      if indexes.any?
-        script << '-' * 80
-        script << "-- INDEXES\n--"
-        script.concat(indexes.map { |i| i.script })
-        script << ""
-      end
-      if permissions.any?
-        script << '-' * 80
-        script << "-- PERMISSIONS\n--"
-        script.concat(permissions.map { |p| p.script })
-        script << ""
-      end
+
+      append(script, foreign_keys, "FOREIGN KEYS")
+      append(script, constraints, "CONSTRAINTS")
+      append(script, indexes, "INDEXES")
+      append(script, permissions, "PERMISSIONS")
+      append(script, extended_properties, "EXTENDED PROPERTIES")
+
       script.join("\n")
     end
 
@@ -308,8 +295,61 @@ module Mossy
       indexes.map { |i| Index.new(i) }
     end
 
+    def get_extended_properties(object)
+      @connection.exec_rows(<<-SQL
+        select
+          name = x.name,
+          value = convert(nvarchar(max), x.value),
+
+          level_0_type = 'schema',
+          level_0_name = object_schema_name(x.major_id),
+
+          level_1_type = case o.type
+                  when 'V' then 'view'
+                  when 'P' then 'procedure'
+                  when 'U' then 'table'
+                  when 'FN' then 'function'
+                  when 'TF' then 'function'
+                  when 'IF' then 'function'
+                  when 'SN' then 'synonym'
+                  when 'TR' then 'trigger'
+                end,
+
+          level_1_name = o.name,
+
+          level_2_type = case
+                  when minor_id = 0 then null
+                  when o.type = 'V' then 'column'
+                  when o.type = 'P' then 'parameter'
+                  when o.type = 'U' then 'column'
+                end,
+          level_2_name = case class
+                  when 1 then col_name(major_id, minor_id)
+                  when 2 then (select name from sys.parameters where object_id = x.major_id and parameter_id = x.minor_id)
+                  when 7 then (select name from sys.indexes where object_id = x.major_id and index_id = x.minor_id)
+                end
+        from
+          sys.extended_properties x
+          inner join sys.objects o on o.object_id = x.major_id
+        where
+          x.major_id = object_id('#{object}');
+      SQL
+      ).map { |e| ExtendedProperty.new(e) }
+    end
+
     def get_tables
       @connection.exec_array("SELECT name FROM sys.tables;")
+    end
+
+    def append(script, items, title)
+      if items.any?
+        if @comment_scripts
+          script << '-' * 80
+          script << "-- #{title}\n--"
+        end
+        script.concat(items.map { |i| i.script })
+        script << ""
+      end
     end
   end
 end
