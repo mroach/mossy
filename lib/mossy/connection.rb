@@ -5,7 +5,7 @@ module Mossy
     attr_reader :connection
 
     DEFAULTS = {
-      :appname => File.basename($PROGRAM_NAME),
+      :appname => "Mossy",
       :timeout => 20,
       :login_timeout => 10
     }.freeze
