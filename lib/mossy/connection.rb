@@ -13,6 +13,13 @@ module Mossy
     def initialize(args = {})
       args = args ? DEFAULTS.merge(args) : DEFAULTS
       @connection = ::TinyTds::Client.new(args)
+
+      # by default freetds will be using a text size of 64k
+      # which translates to 32k of nvarchar which isn't enough
+      exec_non_query("SET TEXTSIZE 2147483647;")
+
+      # ensure our reading of metadata isn't hung up on transaction locks
+      exec_non_query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;")
     end
 
     def use(database)
