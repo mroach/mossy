@@ -14,3 +14,5 @@ module Mossy
     end
   end
 end
+
+Dir[File.dirname(__FILE__) + "/sql_object/*.rb"].each{ |file| require(file) }
