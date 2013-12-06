@@ -1,7 +1,7 @@
 module Mossy
   class Column
 
-    attr_accessor :name, :type, :is_computed, :is_identity, :is_nullable
+    attr_accessor :name, :type, :column_id, :is_computed, :is_identity, :is_nullable
     attr_accessor :default_definition, :computed_definition
     attr_accessor :seed_value, :increment_value, :precision, :scale
 
