@@ -10,6 +10,14 @@ class String
   def sql_quote
     ::Mossy::Helpers::quote(self)
   end
+
+  def sql_bin
+    "0x" + self.unpack('H*').first
+  end
+
+  def titleize
+    split(/(\W)/).map(&:capitalize).join
+  end
 end
 
 class Array
