@@ -48,12 +48,8 @@ module Mossy
       "#{parts.join(' ')};"
     end
 
-    def option_list(opts)
-      opts.map { |k,v| "#{k} = #{v}" }.join(', ')
-    end
-
-    def script_column_list(cols)
-      cols.map { |c| "#{c[:column_name]}#{c[:is_descending_key] ? ' DESC' : ''}" }.join(', ')
+    def drop_script
+      "ALTER TABLE #{@table.quotename} DROP INDEX #{name.quotename};"
     end
 
     def index_columns
@@ -62,6 +58,24 @@ module Mossy
 
     def included_columns
       @columns.select { |c| c[:is_included_column] }
+    end
+
+    def priority
+      case
+        when @is_primary_key then 1
+        when @type == 'CLUSTERED' then 2
+        else 10
+      end
+    end
+
+    protected
+
+    def option_list(opts)
+      opts.map { |k,v| "#{k} = #{v}" }.join(', ')
+    end
+
+    def script_column_list(cols)
+      cols.map { |c| "#{c[:column_name]}#{c[:is_descending_key] ? ' DESC' : ''}" }.join(', ')
     end
 
   end
