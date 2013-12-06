@@ -11,6 +11,7 @@ module Mossy
     end
 
     def script
+      raise "No columns!" if @columns.nil? || @columns.length == 0
       col_indent = @columns.max_by { |c| c.name.length }.name.length
       parts = []
       parts << "CREATE TABLE #{@schema.quotename}.#{@name.quotename} ("
