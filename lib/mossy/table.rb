@@ -15,7 +15,7 @@ module Mossy
       col_indent = @columns.max_by { |c| c.name.length }.name.length
       parts = []
       parts << "CREATE TABLE #{@schema.quotename}.#{@name.quotename} ("
-      parts << @columns.map {|c| "    #{c.definition(col_indent)}" }.join(",\n")
+      parts << @columns.sort_by { |c| c.column_id }.map {|c| "    #{c.definition(col_indent)}" }.join(",\n")
       parts << ")"
       parts << "ON #{@data_space.quotename}"
       if !@lob_space.nil? && @lob_space != @data_space
