@@ -1,7 +1,7 @@
 module Mossy
   class Index
 
-    attr_accessor :name, :type, :table_name
+    attr_accessor :name, :type, :table
     attr_accessor :is_primary_key, :is_unique, :is_unique_constraint
     attr_accessor :ignore_dup_key, :fill_factor, :is_padded
     attr_accessor :has_filter, :filter_definition
