@@ -1,6 +1,3 @@
-require "tiny_tds"
-require "benchmark"
-
 module Mossy
   class Connection
     attr_reader :connection

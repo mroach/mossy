@@ -1,3 +1,6 @@
+require 'tiny_tds'
+require 'benchmark'
+
 $:.unshift File.dirname(__FILE__)
 
 require 'core_ext.rb'
