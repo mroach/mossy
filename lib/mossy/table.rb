@@ -17,8 +17,8 @@ module Mossy
       parts << @columns.map {|c| "    #{c.definition(col_indent)}" }.join(",\n")
       parts << ")"
       parts << "ON #{@data_space.quotename}"
-      if @lob_space != @data_space
-        parts << "TEXTIMAGE_ON #{@data_space.quotename}"
+      if !@lob_space.nil? && @lob_space != @data_space
+        parts << "TEXTIMAGE_ON #{@lob_space.quotename}"
       end
       "#{parts.join("\n")};"
     end
