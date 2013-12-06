@@ -1,7 +1,7 @@
 module Mossy
-  class ForeignKey
+  class ForeignKey < SqlObject
 
-    attr_accessor :name, :schema, :table, :referencing_column
+    attr_accessor :table, :referencing_column
     attr_accessor :referenced_table_schema, :referenced_table, :referenced_column
     attr_accessor :delete_action, :update_action
 

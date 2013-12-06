@@ -1,7 +1,7 @@
 module Mossy
-  class Constraint
+  class Constraint < SqlObject
 
-    attr_accessor :table, :name, :definition
+    attr_accessor :table, :definition
 
     def initialize(spec = {})
       spec.each do |k,v|

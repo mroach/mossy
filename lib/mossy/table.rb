@@ -1,8 +1,8 @@
 module Mossy
-  class Table
+  class Table < SqlObject
 
-    attr_accessor :schema, :name, :columns
-    attr_accessor :data_space, :lob_space
+    attr_accessor :columns, :data_space, :lob_space
+    attr_accessor :indexes, :permissions, :foreign_keys, :constraints
 
     def initialize(spec = {})
       spec.each do |k,v|
