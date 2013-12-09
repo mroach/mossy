@@ -20,7 +20,12 @@ module Mossy
       @query_count = 0
       @query_time = 0
 
-      @connection = ::TinyTds::Client.new(args)
+      begin
+        @connection = ::TinyTds::Client.new(args)
+      rescue => e
+        raise "Connecting to #{@host} as '#{@username}' failed: #{e}"
+        return
+      end
 
       # configure the same set options as you'd get in Management Studio
       set_options = {
