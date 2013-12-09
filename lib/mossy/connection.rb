@@ -38,9 +38,11 @@ module Mossy
       }
       exec_non_query(set_options.map { |name,value| "SET #{name} #{value};" }.join(' '))
 
+      @database = exec_scalar("SELECT DB_NAME();")
     end
 
     def use(database)
+      @database = database
       exec_non_query("USE #{database.quotename};")
     end
 
