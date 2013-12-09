@@ -21,12 +21,23 @@ module Mossy
 
       @connection = ::TinyTds::Client.new(args)
 
-      # by default freetds will be using a text size of 64k
-      # which translates to 32k of nvarchar which isn't enough
-      exec_non_query("SET TEXTSIZE 2147483647;")
+      # configure the same set options as you'd get in Management Studio
+      set_options = {
+        "ROWCOUNT" => "0",
+        "TEXTSIZE" => "2147483647",
+        "NOCOUNT" => "OFF",
+        "CONCAT_NULL_YIELDS_NULL" => "ON",
+        "ARITHABORT" => "ON",
+        "ANSI_NULLS" => "ON",
+        "ANSI_PADDING" => "ON",
+        "ANSI_WARNINGS" => "ON",
+        "CURSOR_CLOSE_ON_COMMIT" => "OFF",
+        "IMPLICIT_TRANSACTIONS" => "OFF",
+        "QUOTED_IDENTIFIER" => "ON",
+        "TRANSACTION ISOLATION LEVEL" => "READ COMMITTED"
+      }
+      exec_non_query(set_options.map { |name,value| "SET #{name} #{value};" }.join(' '))
 
-      # ensure our reading of metadata isn't hung up on transaction locks
-      exec_non_query("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;")
     end
 
     def use(database)
