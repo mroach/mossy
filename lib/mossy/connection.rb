@@ -1,6 +1,8 @@
 module Mossy
   class Connection
+
     attr_reader :connection
+    attr_reader :query_count, :query_time
 
     DEFAULTS = {
       :appname => "Mossy",
@@ -8,8 +10,6 @@ module Mossy
       :login_timeout => 10,
       :logger => Logger.new(nil)
     }.freeze
-
-    attr_reader :query_count, :query_time
 
     def initialize(args = {})
       args = args ? DEFAULTS.merge(args) : DEFAULTS
