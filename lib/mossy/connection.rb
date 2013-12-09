@@ -12,6 +12,9 @@ module Mossy
 
     def initialize(args = {})
       args = args ? DEFAULTS.merge(args) : DEFAULTS
+      args.each do |k,v|
+        instance_variable_set("@#{k}", v)
+      end
 
       @query_count = 0
       @query_time = 0
