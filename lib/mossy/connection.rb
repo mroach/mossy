@@ -5,7 +5,8 @@ module Mossy
     DEFAULTS = {
       :appname => "Mossy",
       :timeout => 20,
-      :login_timeout => 10
+      :login_timeout => 10,
+      :logger => Logger.new(nil)
     }.freeze
 
     attr_reader :query_count, :query_time
@@ -73,6 +74,7 @@ module Mossy
     protected
 
     def exec(sql)
+      @logger.debug("#{@username}@#{@host}:#{@database}") { sql }
       result = nil
       @query_count += 1
       @query_time += ::Benchmark.realtime do

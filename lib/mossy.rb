@@ -1,5 +1,6 @@
 require 'tiny_tds'
 require 'benchmark'
+require 'logger'
 
 $:.unshift File.dirname(__FILE__)
 

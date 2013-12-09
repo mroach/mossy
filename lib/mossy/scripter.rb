@@ -15,7 +15,8 @@ module Mossy
       :include_indexes => true,
       :include_foreign_keys => true,
       :include_extended_properties => true,
-      :comment_scripts => true
+      :comment_scripts => true,
+      :logger => Logger.new(nil)
     }.freeze
 
     # map object type abbreviations to names used in create/drop statements
@@ -211,7 +212,7 @@ module Mossy
     end
 
     def get_modules(filters = {})
-      puts "Loading modules with filters #{filters.inspect}"
+      @logger.info "Loading modules with filters #{filters.inspect}"
       sql = <<-SQL
         select
           [schema] = schema_name(o.schema_id),
@@ -310,7 +311,7 @@ module Mossy
     end
 
     def get_permissions(object = nil, type = nil)
-      puts "Getting permissions for #{object}"
+      @logger.info "Getting permissions for #{object}"
       sql = <<-SQL
         select
           grant_or_deny = state_desc,
@@ -337,7 +338,7 @@ module Mossy
     end
 
     def get_constraints(table = nil)
-      puts "Getting constraints for #{table}"
+      @logger.info "Getting constraints for #{table}"
       sql = <<-SQL
         -- fetching constraints for #{table}
         select
@@ -382,7 +383,7 @@ module Mossy
     end
 
     def get_indexes(object = nil)
-      puts "Getting indexes for #{object}"
+      @logger.info "Getting indexes for #{object}"
       sql = <<-SQL
         select
           -- index properties
@@ -438,7 +439,7 @@ module Mossy
     end
 
     def get_extended_properties(object = nil)
-      puts "Getting extended properties for #{object}"
+      @logger.info "Getting extended properties for #{object}"
       @connection.exec_rows(<<-SQL
         select
           name = x.name,
